@@ -1,3 +1,3 @@
 # Python-DS
 
-## Data structure implementation in Python3
+Data structure implementation in Python3
