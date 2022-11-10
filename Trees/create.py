@@ -235,16 +235,54 @@ class CreateTree:
             if(node.get_right() != None):
                 q.enqueue(node.get_right())
 
-ct = CreateTree()
-ct.start()
-ct.traverse_pre_order(ct.root_node)
-print()
-ct.traverse_in_order(ct.root_node)
-print()
-ct.traverse_post_order(ct.root_node)
-print()
-ct.for_traverse_pre_order()
-print()
-ct.for_traverse_in_order()
-print()
-ct.traverse_level_order()
+class BinaryTree:
+    def __init__(self) -> None:
+        self.root_node = None
+
+    def insert(self, node, key):
+        t = None
+        if node == None:
+            t = TreeNode()
+            t.set_data(key)           
+            return t
+
+        if key < node.get_data():
+            node.set_left(self.insert(node.get_left(), key))
+        elif key > node.get_data():
+            node.set_right(self.insert(node.get_right(), key))
+        return node
+
+    def create(self, arr):
+        for i in arr:
+            self.root_node = self.insert(self.root_node, i)
+
+    def binary_search(self, key, node):
+        if node == None:
+            return False
+        if key == node.get_data():
+            return True
+        elif key < node.get_data():
+            return self.binary_search(key, node.get_left())
+        elif key > node.get_data():
+            return self.binary_search(key, node.get_right())
+
+# ct = CreateTree()
+# ct.start()
+# ct.traverse_pre_order(ct.root_node)
+# print()
+# ct.traverse_in_order(ct.root_node)
+# print()
+# ct.traverse_post_order(ct.root_node)
+# print()
+# ct.for_traverse_pre_order()
+# print()
+# ct.for_traverse_in_order()
+# print()
+# ct.traverse_level_order()
+# print()
+# key = input("Key to search:")
+# print(ct.binary_search(key, ct.root_node))
+
+bst = BinaryTree()
+bst.create([20,80,35,42,18,96,57,21,43,61,75,84,69])
+print(bst.binary_search(84, bst.root_node))
