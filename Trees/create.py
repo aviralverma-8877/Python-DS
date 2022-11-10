@@ -220,6 +220,20 @@ class CreateTree:
                 node = s.pop()
                 print(node.get_data(), end="")
                 node = node.get_right()
+    
+    def traverse_level_order(self):
+        node = self.root_node
+        if(node == None):
+            return
+        q = Queue()
+        q.enqueue(node)
+        while(not q.empty() or node == None):
+            node = q.dequeue()
+            print(node.get_data(), end="")
+            if(node.get_left() != None):
+                q.enqueue(node.get_left())
+            if(node.get_right() != None):
+                q.enqueue(node.get_right())
 
 ct = CreateTree()
 ct.start()
@@ -232,3 +246,5 @@ print()
 ct.for_traverse_pre_order()
 print()
 ct.for_traverse_in_order()
+print()
+ct.traverse_level_order()
