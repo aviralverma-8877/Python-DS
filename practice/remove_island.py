@@ -1,12 +1,58 @@
 input = [
-    [1 , 0 , 0 , 0 , 0 , 0, 1],
-    [0 , 1 , 0 , 1 , 1 , 1, 1],
-    [0 , 0 , 1 , 0 , 1 , 0, 0],
-    [1 , 1 , 0 , 0 , 1 , 0, 0],
-    [1 , 0 , 1 , 1 , 0 , 0, 1],
-    [1 , 0 , 0 , 0 , 0 , 1, 0]
+    [1 , 0 , 0 , 0 , 0 , 0],
+    [0 , 1 , 0 , 1 , 1 , 1],
+    [0 , 0 , 1 , 0 , 1 , 0],
+    [1 , 1 , 0 , 0 , 1 , 0],
+    [1 , 0 , 1 , 1 , 0 , 0],
+    [1 , 0 , 0 , 0 , 0 , 1]
 ]
+# Question: https://www.youtube.com/watch?v=4tYoVx0QoN0&t=1479s
+# Using flood fill algo
+class Solution2:
+    def __init__(self, input):
+        self.input = input
+        self.xmax = len(input)
+        self.ymax = len(input[0])
+        self.visited = [[None for i in range(len(input[0]))] for j in range(len(input))]
+        self.final_map = [[0 for i in range(len(input[0]))] for j in range(len(input))]
+    
+    def explore(self, i, j):        
+        if i <= -1 or i >= self.xmax:
+            return False
+        if j <= -1 or j >= self.ymax:
+            return False
 
+        if self.visited[i][j] != None:            
+            if self.visited[i][j] == 1:                 #Its water
+                return True
+            elif self.visited[i][j] == 0:               #Its defnitly land but not Island
+                return False
+            elif self.visited[i][j] == 3:               #This land is under explore
+                return True
+
+        self.visited[i][j] = 3                          #Marking as under explore
+        if(self.input[i][j] == 1):
+            result = True and self.explore(i-1,j) and self.explore(i,j-1) and self.explore(i+1,j) and self.explore(i,j+1)
+            if result:
+                self.visited[i][j] = 2                  #Land Explored and is an Island
+            else:
+                self.visited[i][j] = 0                  #Land Explored and is not an Island
+            return result
+        elif(self.input[i][j] == 0):                    #Its water
+            self.visited[i][j] = 1
+            return True
+
+    def start(self):
+        for i in range(0, len(self.input)):
+            for j in range(0, len(self.input[0])):
+                self.explore(i, j)
+        for i in range(0, len(self.visited)):
+            for j in range(0, len(self.visited[0])):
+                if self.visited[i][j] == 2:
+                    self.final_map[i][j] = 1
+        return self.final_map
+
+#Using matrix algo
 class Solution:
     def __init__(self, inp) -> None:
         self.orignal = inp
@@ -79,9 +125,8 @@ class Solution:
         superimposed = self.superimpose_matrix(removed_island_orginal, removed_island_rotated, len(removed_island_rotated)-1, len(removed_island_rotated[0])-1)
         return superimposed
 
-
-s = Solution(input)
-result = s.removeIsland()
+s = Solution2(input)
+result = s.start()
 for i in range(0, len(result)):
     for j in range(0, len(result[i])):
         print(result[i][j], end=" ")
