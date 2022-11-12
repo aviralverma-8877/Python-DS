@@ -148,6 +148,9 @@ class TreeNode:
 
     def set_right(self, node):
         self.right = node
+    
+    def set_node(self, node):
+        self = node
 
 class CreateTree:
     def __init__(self) -> None:
@@ -157,23 +160,35 @@ class CreateTree:
     def start(self):
         root = input("What is the root value:")
         self.root_node = TreeNode()
-        self.root_node.set_data(root)
+        self.root_node.set_data(int(root))
         self.q.enqueue(self.root_node)
         while(not self.q.empty()):
             node = self.q.dequeue()
             left = input(f"Enter the value for left child of {node.get_data()}:")
             if(left != "-1"):
                 t = TreeNode()
-                t.set_data(left)
+                t.set_data(int(left))
                 node.set_left(t)
                 self.q.enqueue(t)
             right = input(f"Enter the value for right child of {node.get_data()}:")
             if(right != "-1"):
                 t = TreeNode()
-                t.set_data(right)
+                t.set_data(int(right))
                 node.set_right(t)
                 self.q.enqueue(t)
         return
+
+    def serialize_in_order(self, node, ser = []):
+        if node != None:
+            self.serialize_in_order(node.get_left(), ser)
+            ser.append(node.get_data())
+            self.serialize_in_order(node.get_right(), ser)
+    
+    def serialize_pre_order(self, node, ser = []):
+        if node != None:
+            ser.append(node.get_data())
+            self.serialize_pre_order(node.get_left(), ser)
+            self.serialize_pre_order(node.get_right(), ser)
 
     def traverse_pre_order(self, node):
         if node != None:
@@ -235,6 +250,40 @@ class CreateTree:
             if(node.get_right() != None):
                 q.enqueue(node.get_right())
 
+    def deserialize(self, pre_order, in_order):
+        m = self.gen_mapper(in_order)
+        if self.root_node == None:
+            self.root_node = TreeNode()
+            self.root_node.set_data(pre_order[0])
+        l = pre_order[1:]
+        while len(l) > 0:
+            node = self.root_node
+            p = l[0]
+            l = l[1:]
+            method = None
+            while node != None:
+                if(m[p-1]<m[node.get_data()-1]):
+                    method = node.set_left
+                    node = node.get_left()                    
+                else:
+                    method = node.set_right
+                    node = node.get_right()
+            n = TreeNode()
+            n.set_data(p)
+            method(n)
+        return self.root_node
+
+        
+    
+    def gen_mapper(self, l):
+        mapper = [None for i in range(max(l))]
+        for i in enumerate(l):
+            index = i[0]
+            ele = i[1]
+            mapper[ele-1] = index
+        return mapper
+
+
 class BinaryTree:
     def __init__(self) -> None:
         self.root_node = None
@@ -266,8 +315,20 @@ class BinaryTree:
         elif key > node.get_data():
             return self.binary_search(key, node.get_right())
 
-# ct = CreateTree()
-# ct.start()
+ct = CreateTree()
+ct.start()
+
+ser_in_order = []
+ct.serialize_in_order(ct.root_node,ser_in_order)
+print(ser_in_order)
+
+ser_pre_order = []
+ct.serialize_pre_order(ct.root_node,ser_pre_order)
+print(ser_pre_order)
+
+dst = CreateTree()
+dst.deserialize(ser_pre_order, ser_in_order)
+pass
 # ct.traverse_pre_order(ct.root_node)
 # print()
 # ct.traverse_in_order(ct.root_node)
@@ -283,6 +344,7 @@ class BinaryTree:
 # key = input("Key to search:")
 # print(ct.binary_search(key, ct.root_node))
 
-bst = BinaryTree()
-bst.create([20,80,35,42,18,96,57,21,43,61,75,84,69])
-print(bst.binary_search(84, bst.root_node))
+# bst = BinaryTree()
+# bst.create(ser)
+# pass
+# print(bst.binary_search(84, bst.root_node))
