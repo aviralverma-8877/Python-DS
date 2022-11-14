@@ -1,6 +1,29 @@
 #https://leetcode.com/problems/zigzag-conversion/submissions/
 # list of stack = [[P,A,Y],[*,P,*],......]
 
+class Solution2:
+    def convert(self, s: str, numRows: int) -> str:
+        rows = ["" for i in range(min(numRows, len(s)))]
+        curRow = 0
+        goingDown = False
+        
+        for c in s:
+            rows[curRow] += c
+            if curRow == 0 or curRow == (numRows-1):
+                goingDown = not goingDown
+            if goingDown:
+                curRow += 1
+            else:
+                curRow -= 1
+        return ''.join(rows)
+
+s =Solution2()
+#print(s.convert("PAYPALISHIRING", 3))
+
+print(s.convert("AB", 1))
+
+
+
 class Solution:
     def convert(self, s: str, numRows: int) -> str:
         l = []
