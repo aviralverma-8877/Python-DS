@@ -272,8 +272,6 @@ class CreateTree:
             n.set_data(p)
             method(n)
         return self.root_node
-
-        
     
     def gen_mapper(self, l):
         mapper = [None for i in range(max(l))]
@@ -283,6 +281,52 @@ class CreateTree:
             mapper[ele-1] = index
         return mapper
 
+
+#https://www.youtube.com/watch?v=thkuu_FWFD8&t=336s
+    def left_view(self):
+        result = []
+        stack = []
+        node = self.root_node
+        while(len(stack)!=0 or node!=None):
+            if node!= None:
+                stack.append(node)
+                result.append(node.get_data())
+                if(node.get_left() == None and node.get_right() == None):
+                    break
+                node = node.get_left()
+            else:
+                node = stack.pop()
+                node = node.get_right()
+        return result
+    
+#This method is for practice as well as getting transversed list
+    def pre_order_traversal_list(self):
+        stack = []
+        pre_order_trans = []
+        node = self.root_node
+        while(len(stack)!=0 or node!=None):
+            if node!= None:
+                stack.append(node)
+                pre_order_trans.append(node.get_data())
+                node = node.get_left()
+            else:
+                node = stack.pop()
+                node = node.get_right()
+        return pre_order_trans
+
+    def in_order_traversal_list(self):
+        stack = []
+        in_order_trans = []
+        node = self.root_node
+        while(len(stack)!=0 or node!=None):
+            if node!= None:
+                stack.append(node)                
+                node = node.get_left()
+            else:
+                node = stack.pop()
+                in_order_trans.append(node.get_data())
+                node = node.get_right()
+        return in_order_trans
 
 class BinaryTree:
     def __init__(self) -> None:
@@ -317,18 +361,18 @@ class BinaryTree:
 
 ct = CreateTree()
 ct.start()
+print(ct.left_view())
+# ser_in_order = []
+# ct.serialize_in_order(ct.root_node,ser_in_order)
+# print(ser_in_order)
 
-ser_in_order = []
-ct.serialize_in_order(ct.root_node,ser_in_order)
-print(ser_in_order)
+# ser_pre_order = []
+# ct.serialize_pre_order(ct.root_node,ser_pre_order)
+# print(ser_pre_order)
 
-ser_pre_order = []
-ct.serialize_pre_order(ct.root_node,ser_pre_order)
-print(ser_pre_order)
-
-dst = CreateTree()
-dst.deserialize(ser_pre_order, ser_in_order)
-pass
+# dst = CreateTree()
+# dst.deserialize(ser_pre_order, ser_in_order)
+# pass
 # ct.traverse_pre_order(ct.root_node)
 # print()
 # ct.traverse_in_order(ct.root_node)
